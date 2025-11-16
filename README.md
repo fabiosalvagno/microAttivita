@@ -41,6 +41,8 @@ Alcune micro-attività usate in classe:
 
 ---
 
+Alcuni screenshot dell’interfaccia si trovano nella cartella [`screenshots`](./screenshots).
+
 ## 🛠️ Requisiti
 
 - PHP 8.2+ (consigliato)
