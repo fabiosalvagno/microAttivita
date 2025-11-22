@@ -39,7 +39,6 @@
                         📝 Istruzioni / 説明
                     </h3>
                     <ul class="space-y-4 text-gray-700">
-                        
                         @if($audioUrl)
                         <li class="flex items-start">
                             <span class="mr-3 text-2xl">🎧</span>
@@ -49,7 +48,6 @@
                             </div>
                         </li>
                         @endif
-
                         <li class="flex items-start">
                             <span class="mr-3 text-2xl">👆</span>
                             <div>
@@ -108,12 +106,15 @@
                 </div>
 
                 <div id="audio-container" class="hidden mb-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                    <div class="text-center mb-3">
-                        <p class="text-indigo-800 font-bold text-sm">Ascolta la registrazione</p>
-                        <p class="text-indigo-600 text-xs">音声を再生 (一時停止可能)</p>
+                    <div class="text-center mb-2">
+                        <p class="text-indigo-800 font-bold text-sm">Ascolta la registrazione / 音声を再生</p>
                     </div>
                     
                     <audio id="audio-player" class="w-full mb-4 h-8 hidden"></audio>
+
+                    <div id="audio-time-display" class="text-center text-indigo-900 font-mono text-lg font-bold mb-4 tracking-wider">
+                        0:00 / 0:00
+                    </div>
 
                     <div class="flex justify-center items-center gap-4">
                         <button id="btn-rewind" class="flex flex-col items-center justify-center w-16 h-16 bg-white text-indigo-600 rounded-full shadow border border-indigo-200 hover:bg-indigo-100 active:scale-95 transition-all">
@@ -198,6 +199,7 @@
         // Audio
         const audioContainerEl = document.getElementById('audio-container');
         const audioPlayerEl = document.getElementById('audio-player');
+        const audioTimeDisplay = document.getElementById('audio-time-display');
         const btnPlayPause = document.getElementById('btn-play-pause');
         const iconPlay = document.getElementById('icon-play');
         const iconPause = document.getElementById('icon-pause');
@@ -233,6 +235,19 @@
         let score = 0;
         let userAnswers = [];
 
+        function formatAudioTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function updateAudioTimeDisplay() {
+            const current = formatAudioTime(audioPlayerEl.currentTime);
+            const duration = formatAudioTime(audioPlayerEl.duration);
+            audioTimeDisplay.textContent = `${current} / ${duration}`;
+        }
+
         function setupAudioControls() {
             btnPlayPause.addEventListener('click', () => {
                 if (audioPlayerEl.paused) { audioPlayerEl.play(); } 
@@ -240,14 +255,18 @@
             });
             audioPlayerEl.addEventListener('play', () => { iconPlay.classList.add('hidden'); iconPause.classList.remove('hidden'); });
             audioPlayerEl.addEventListener('pause', () => { iconPause.classList.add('hidden'); iconPlay.classList.remove('hidden'); });
+            
+            // Aggiornamento tempo audio
+            audioPlayerEl.addEventListener('timeupdate', updateAudioTimeDisplay);
+            audioPlayerEl.addEventListener('loadedmetadata', updateAudioTimeDisplay);
+
             btnRewind.addEventListener('click', () => { audioPlayerEl.currentTime = Math.max(0, audioPlayerEl.currentTime - 10); });
             btnForward.addEventListener('click', () => { audioPlayerEl.currentTime = Math.min(audioPlayerEl.duration, audioPlayerEl.currentTime + 10); });
             
-            // DEBUG ERRORI AUDIO
             audioPlayerEl.addEventListener('error', (e) => {
                 console.error("Errore audio:", e);
                 audioErrorMsg.classList.remove('hidden');
-                audioErrorMsg.textContent = "Errore: File audio non trovato o formato non supportato.";
+                audioErrorMsg.textContent = "Errore: File audio non trovato.";
             });
         }
 
@@ -294,7 +313,6 @@
 
             if (audioUrl) {
                 audioPlayerEl.src = audioUrl;
-                // FORZA IL CARICAMENTO
                 audioPlayerEl.load();
                 audioContainerEl.classList.remove('hidden');
                 setupAudioControls();
