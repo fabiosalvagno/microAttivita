@@ -17,21 +17,15 @@
                     <table class="w-full text-sm text-left text-gray-500 table-fixed">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 w-auto">Titolo</th>
-
-                                <th scope="col" class="px-6 py-3 w-32">Tipo</th>
-
-                                <th scope="col" class="px-6 py-3 w-24">Tempo</th>
-
-                                <th scope="col" class="px-6 py-3 w-1/3">Tags</th>
-
-                                <th scope="col" class="px-6 py-3 text-center w-48">Azioni</th>
+                                <th scope="col" class="px-6 py-3 w-3/12">Titolo</th>
+                                <th scope="col" class="px-6 py-3 w-2/12">Tipo</th> <th scope="col" class="px-6 py-3 w-1/12">Tempo</th>
+                                <th scope="col" class="px-6 py-3 w-4/12">Tags</th> <th scope="col" class="px-6 py-3 text-center w-2/12">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($attivita_lista as $attivita)
                             <tr class="bg-white border-b hover:bg-gray-50">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-normal break-words">
                                     {{ $attivita->json_data['titolo'] ?? 'Titolo non disponibile' }}
                                 </th>
 
@@ -40,13 +34,13 @@
                                     $tipo = $attivita->json_data['tipo'] ?? 'scelta_multipla';
                                     @endphp
                                     @if ($tipo === 'vero_falso')
-                                    <span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Vero / Falso</span>
+                                    <span class="bg-sky-100 text-sky-800 text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">Vero / Falso</span>
                                     @else
-                                    <span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Scelta Multipla</span>
+                                    <span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">Scelta Multipla</span>
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($attivita->limite_tempo)
                                     @php
                                     $minuti = floor($attivita->limite_tempo / 60);
@@ -60,13 +54,13 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4 align-top" id="tags-container-{{ $attivita->id }}">
+                                <td class="px-6 py-4 whitespace-normal align-top" id="tags-container-{{ $attivita->id }}">
                                     <div class="tags-display flex flex-wrap gap-2 justify-start items-center group">
                                         <div class="tags-content">
                                             {!! \App\Helpers\TagHelper::generateTagsHTML($attivita->tags) !!}
                                         </div>
 
-                                        <button class="edit-tags-btn invisible group-hover:visible p-1 text-gray-400 hover:text-blue-600" data-id="{{ $attivita->id }}">
+                                        <button class="edit-tags-btn invisible group-hover:visible p-1 text-gray-400 hover:text-blue-600 flex-shrink-0" data-id="{{ $attivita->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                             </svg>
@@ -82,14 +76,14 @@
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center space-x-2">
                                         <button title="Mostra QR Code" class="qr-code-btn p-2 text-gray-500 hover:text-indigo-600"
                                             data-id="{{ $attivita->id_univoco }}"
                                             data-title="{{ $attivita->json_data['titolo'] ?? 'Attività' }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M5 5a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H6a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2zM13 4a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 00-1-1h-2zM9 9a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V9z" />
-                                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm2 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H6a1 1 0 01-1-1v-4zM11 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V3zm5 8a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2z" clip-rule="evenodd" />
+                                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm2 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H6a1 1 0 01-1-1v-4zM11 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H6a1 1 0 01-1-1V3zm5 8a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2z" clip-rule="evenodd" />
                                             </svg>
                                         </button>
 
