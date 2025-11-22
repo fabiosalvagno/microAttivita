@@ -14,14 +14,18 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500">
+                    <table class="w-full text-sm text-left text-gray-500 table-fixed">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3">Titolo</th>
-                                <th scope="col" class="px-6 py-3">Tipo</th>
-                                <th scope="col" class="px-6 py-3">Tempo</th>
+                                <th scope="col" class="px-6 py-3 w-auto">Titolo</th>
+
+                                <th scope="col" class="px-6 py-3 w-32">Tipo</th>
+
+                                <th scope="col" class="px-6 py-3 w-24">Tempo</th>
+
                                 <th scope="col" class="px-6 py-3 w-1/3">Tags</th>
-                                <th scope="col" class="px-6 py-3 text-center min-w-[180px]">Azioni</th>
+
+                                <th scope="col" class="px-6 py-3 text-center w-48">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
