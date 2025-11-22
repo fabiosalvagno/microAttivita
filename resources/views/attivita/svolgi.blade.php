@@ -9,29 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .correct-answer {
-            background-color: #22c55e !important;
-            color: white !important;
-            border-color: #16a34a !important;
-            transform: scale(1.05);
-        }
-        .wrong-answer {
-            background-color: #ef4444 !important;
-            color: white !important;
-            border-color: #dc2626 !important;
-        }
-        .disabled-option {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        @keyframes sparkle {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        .sparkle-animation {
-            animation: sparkle 0.5s ease-out forwards;
-        }
+        .correct-answer { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; transform: scale(1.05); }
+        .wrong-answer { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .disabled-option { pointer-events: none; opacity: 0.7; }
+        @keyframes sparkle { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 50% { transform: scale(1.2) rotate(10deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        .sparkle-animation { animation: sparkle 0.5s ease-out forwards; }
         #timer-bar-inner { transition: width 1s linear, height 0.3s ease, background-color 0.3s ease; }
         #timer-bar-track { transition: height 0.3s ease; }
         .timer-bar-warning { background-color: #ef4444 !important; height: 16px !important; }
@@ -57,6 +39,8 @@
                         📝 Istruzioni / 説明
                     </h3>
                     <ul class="space-y-4 text-gray-700">
+                        
+                        @if($audioUrl)
                         <li class="flex items-start">
                             <span class="mr-3 text-2xl">🎧</span>
                             <div>
@@ -64,6 +48,8 @@
                                 <p class="text-sm text-gray-500">音声を聴いてください。一時停止や巻き戻しも可能です。</p>
                             </div>
                         </li>
+                        @endif
+
                         <li class="flex items-start">
                             <span class="mr-3 text-2xl">👆</span>
                             <div>
@@ -127,7 +113,7 @@
                         <p class="text-indigo-600 text-xs">音声を再生 (一時停止可能)</p>
                     </div>
                     
-                    <audio id="audio-player" class="w-full mb-4 h-8"></audio>
+                    <audio id="audio-player" class="w-full mb-4 h-8 hidden"></audio>
 
                     <div class="flex justify-center items-center gap-4">
                         <button id="btn-rewind" class="flex flex-col items-center justify-center w-16 h-16 bg-white text-indigo-600 rounded-full shadow border border-indigo-200 hover:bg-indigo-100 active:scale-95 transition-all">
@@ -154,6 +140,7 @@
                             <span class="text-xs font-bold">+10s</span>
                         </button>
                     </div>
+                    <p id="audio-error-msg" class="text-red-600 text-sm mt-2 hidden text-center">Errore: File audio non trovato.</p>
                 </div>
 
                 <div id="question-area">
@@ -216,6 +203,7 @@
         const iconPause = document.getElementById('icon-pause');
         const btnRewind = document.getElementById('btn-rewind');
         const btnForward = document.getElementById('btn-forward');
+        const audioErrorMsg = document.getElementById('audio-error-msg');
 
         // Timer
         const timerBlock = document.getElementById('timer-block');
@@ -254,6 +242,13 @@
             audioPlayerEl.addEventListener('pause', () => { iconPause.classList.add('hidden'); iconPlay.classList.remove('hidden'); });
             btnRewind.addEventListener('click', () => { audioPlayerEl.currentTime = Math.max(0, audioPlayerEl.currentTime - 10); });
             btnForward.addEventListener('click', () => { audioPlayerEl.currentTime = Math.min(audioPlayerEl.duration, audioPlayerEl.currentTime + 10); });
+            
+            // DEBUG ERRORI AUDIO
+            audioPlayerEl.addEventListener('error', (e) => {
+                console.error("Errore audio:", e);
+                audioErrorMsg.classList.remove('hidden');
+                audioErrorMsg.textContent = "Errore: File audio non trovato o formato non supportato.";
+            });
         }
 
         // INIZIALIZZAZIONE
@@ -299,6 +294,8 @@
 
             if (audioUrl) {
                 audioPlayerEl.src = audioUrl;
+                // FORZA IL CARICAMENTO
+                audioPlayerEl.load();
                 audioContainerEl.classList.remove('hidden');
                 setupAudioControls();
             } else {
