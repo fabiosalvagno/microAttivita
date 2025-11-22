@@ -20,8 +20,8 @@
                                 <th scope="col" class="px-6 py-3">Titolo</th>
                                 <th scope="col" class="px-6 py-3">Tipo</th>
                                 <th scope="col" class="px-6 py-3">Tempo</th>
-                                <th scope="col" class="px-6 py-3">Tags</th>
-                                <th scope="col" class="px-6 py-3 text-center">Azioni</th>
+                                <th scope="col" class="px-6 py-3 w-1/3">Tags</th>
+                                <th scope="col" class="px-6 py-3 text-center min-w-[180px]">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,7 +56,7 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4 min-w-[200px]" id="tags-container-{{ $attivita->id }}">
+                                <td class="px-6 py-4 max-w-xs whitespace-normal break-words" id="tags-container-{{ $attivita->id }}">
                                     <div class="tags-display flex justify-between items-center group">
                                         <div class="tags-content">
                                             {!! \App\Helpers\TagHelper::generateTagsHTML($attivita->tags) !!}
